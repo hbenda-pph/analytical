@@ -10,7 +10,7 @@ Analytical/
 │   └── workflows/          # GitHub Actions para CI/CD
 │       ├── terraform.yml   # Pipeline de Terraform
 │       └── sync.yml        # Pipeline de sincronización
-├── source/                 # Queries SQL del dataset analytical
+├── bigquery/               # Queries SQL del dataset analytical (workspace de BigQuery Studio)
 ├── terraform/              # Infraestructura como código (Terraform)
 │   ├── main.tf            # Configuración principal
 │   ├── variables.tf       # Variables
@@ -31,11 +31,11 @@ Analytical/
 
 1. **Sincronización GitHub ↔ BigQuery**: 
    - Sincronización bidireccional automática mediante **BigQuery Studio Repositories**
-   - Los queries en `source/` se sincronizan automáticamente con BigQuery
+   - Los queries en `bigquery/` se sincronizan automáticamente con BigQuery
    - Control de versiones mediante Git
 
 2. **Implementación con Terraform**: 
-   - Los archivos SQL en `source/` se implementan en GCloud mediante Terraform
+   - Los archivos SQL en `bigquery/` se implementan en GCloud mediante Terraform
    - Terraform lee los archivos SQL y crea recursos de BigQuery (views, scheduled queries)
    - Ejecutar `terraform apply` para desplegar los queries
 
@@ -98,18 +98,19 @@ La sincronización se realiza mediante **BigQuery Studio Repositories** (integra
 
 1. **Configurar BigQuery Studio Repository:**
    - En BigQuery Studio, conectar el repositorio de GitHub
+   - Configurar el workspace como `bigquery` (directorio donde BigQuery sincroniza)
    - Configurar el mapeo entre el repositorio y el dataset `analytical`
    - Los cambios se sincronizan automáticamente en ambas direcciones
 
 2. **Flujo de trabajo:**
-   - Editar queries en BigQuery Studio → Se sincronizan a GitHub
-   - Editar archivos SQL en GitHub → Se sincronizan a BigQuery Studio
-   - Los archivos en `source/` son la fuente de verdad
+   - Editar queries en BigQuery Studio → Se sincronizan a GitHub en `bigquery/`
+   - Editar archivos SQL en GitHub en `bigquery/` → Se sincronizan a BigQuery Studio
+   - Los archivos en `bigquery/` son la fuente de verdad
    - Sincronización automática bidireccional
    - Control de versiones mediante Git
 
 3. **Implementación con Terraform:**
-   - Los archivos SQL en `source/` son leídos directamente por Terraform
+   - Los archivos SQL en `bigquery/` son leídos directamente por Terraform
    - Se implementan como recursos de BigQuery (views, scheduled queries) al ejecutar `terraform apply`
    - No se requieren scripts adicionales
 

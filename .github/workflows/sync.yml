@@ -6,13 +6,13 @@ on:
       - main
       - develop
     paths:
-      - 'source/**'
+      - 'bigquery/**'
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'source/**'
+      - 'bigquery/**'
   workflow_dispatch:
 
 jobs:
@@ -26,8 +26,8 @@ jobs:
 
       - name: Validate SQL syntax
         run: |
-          echo "Validando archivos SQL en source/"
-          find source -name "*.sql" -type f | while read file; do
+          echo "Validando archivos SQL en bigquery/"
+          find bigquery -name "*.sql" -type f | while read file; do
             echo "✓ $file"
             # Aquí se pueden agregar validaciones adicionales si es necesario
           done

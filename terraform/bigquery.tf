@@ -12,10 +12,10 @@ resource "google_bigquery_dataset" "analytical" {
   }
 }
 
-# BigQuery Views - Se crean dinámicamente desde archivos SQL en source/
+# BigQuery Views - Se crean dinámicamente desde archivos SQL en bigquery/
 resource "google_bigquery_table" "views" {
   for_each = {
-    for file in fileset("${path.module}/../source", "**/*.sql") :
+    for file in fileset("${path.module}/../bigquery", "**/*.sql") :
     trimsuffix(basename(file), ".sql") => file
   }
 
@@ -24,7 +24,7 @@ resource "google_bigquery_table" "views" {
   project    = var.project_id
 
   view {
-    query          = file("${path.module}/../source/${each.value}")
+    query          = file("${path.module}/../bigquery/${each.value}")
     use_legacy_sql = false
   }
 

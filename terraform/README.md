@@ -65,16 +65,16 @@ Para usar un backend remoto en GCS (recomendado para producción):
 
 ## Implementación de Queries
 
-Terraform lee automáticamente todos los archivos `.sql` del directorio `source/` y los crea como views en BigQuery:
+Terraform lee automáticamente todos los archivos `.sql` del directorio `bigquery/` y los crea como views en BigQuery:
 
-- Cada archivo `nombre.sql` en `source/` se crea como una view llamada `nombre`
+- Cada archivo `nombre.sql` en `bigquery/` se crea como una view llamada `nombre`
 - Los archivos se leen dinámicamente, no es necesario modificar Terraform al agregar nuevos queries
 - Ejecutar `terraform plan` para ver qué views se crearán
 - Ejecutar `terraform apply` para implementar las views en BigQuery
 
 ### Ejemplo
 
-Si tienes `source/example_view.sql`, Terraform creará una view `example_view` en el dataset `analytical`.
+Si tienes `bigquery/example_view.sql`, Terraform creará una view `example_view` en el dataset `analytical`.
 
 ## Scheduled Queries
 
