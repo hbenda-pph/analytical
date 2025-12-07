@@ -1,0 +1,8 @@
+# Copiar este archivo a terraform.tfvars y configurar con tus valores
+# terraform.tfvars NO debe ser commiteado (está en .gitignore)
+
+project_id  = "pph-central"
+region      = "us-central1"
+dataset_id  = "analytical"
+environment = "dev"
+
