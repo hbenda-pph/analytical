@@ -1,0 +1,19 @@
+CREATE OR REPLACE VIEW `pph-central.analytical.vw_consolidated_call_lead_location` AS
+SELECT cl.*
+     , lo.location_state
+  FROM `pph-central.analytical.vw_consolidated_call_lead`    cl
+  LEFT JOIN `pph-central.bronze.consolidated_customer`       cu                                  
+    ON cu.company_project_id                                = cl.company_project_id
+   AND cu.id                                                = cl.lead_call_customer_id
+  LEFT JOIN (
+       SELECT company_project_id
+            , customer_id
+            , APPROX_TOP_COUNT(UPPER(address_state), 1)[OFFSET(0)].value AS location_state
+         FROM `pph-central.bronze.consolidated_location`
+        WHERE address_state                                 IS NOT NULL
+        GROUP BY company_project_id, customer_id
+       )                                                    lo  
+    ON lo.company_project_id                                = cu.company_project_id
+   AND lo.customer_id                                       = cu.id
+ WHERE location_state                                       IS NOT NULL
+;

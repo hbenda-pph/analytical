@@ -1,0 +1,14 @@
+CREATE OR REPLACE VIEW `pph-central.analytical.vw_consolidated_call_lead` AS
+SELECT cl.* --, cm.name, cm.category_id, cm.category_name
+  FROM `pph-central.bronze.consolidated_call_type_company`  cl
+  LEFT JOIN `pph-central.bronze.consolidated_campaigns`     cm                                    
+    ON cm.company_project_id                                = cl.company_project_id  
+   AND cm.id                                                = cl.campaign_id
+ WHERE CAST(CAST(SPLIT(lead_call_duration, ':')[OFFSET(0)] AS FLOAT64) AS INT64)*3600 + 
+       CAST(CAST(SPLIT(lead_call_duration, ':')[OFFSET(1)] AS FLOAT64) AS INT64)*60   +
+       CAST(CAST(SPLIT(lead_call_duration, ':')[OFFSET(2)] AS FLOAT64) AS INT64)      >= 60
+   AND lead_call_direction                                  = 'Inbound'
+   AND lead_call_call_type                                  IN ("Booked", "Unbooked", "Abandoned")
+;
+
+

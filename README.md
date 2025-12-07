@@ -96,8 +96,19 @@ Ver documentación detallada en [terraform/README.md](terraform/README.md)
 
 La sincronización se realiza mediante **BigQuery Studio Repositories** (integración nativa de GCP):
 
-1. **Configurar BigQuery Studio Repository:**
-   - En BigQuery Studio, conectar el repositorio de GitHub
+1. **Autenticar con GitHub (PASO CRÍTICO):**
+   - En BigQuery Studio, ve a **Repositories**
+   - Haz clic en **Connect repository** o **Authenticate with GitHub**
+   - Se abrirá una ventana de autenticación OAuth de GitHub
+   - **Autoriza a Google Cloud Platform** para acceder a tu repositorio
+   - Asegúrate de otorgar permisos para:
+     - Acceso al repositorio
+     - Lectura y escritura de contenido
+     - Acceso a metadata del repositorio
+   - Completa el proceso de autenticación
+
+2. **Configurar BigQuery Studio Repository:**
+   - En BigQuery Studio, conectar el repositorio de GitHub (después de autenticar)
    - Configurar el workspace como `bigquery` (directorio donde BigQuery sincroniza)
    - Configurar el mapeo entre el repositorio y el dataset `analytical`
    - Los cambios se sincronizan automáticamente en ambas direcciones
@@ -121,9 +132,38 @@ La sincronización se realiza mediante **BigQuery Studio Repositories** (integra
 3. Crear Pull Request hacia `develop` o `main`
 4. Los workflows de GitHub Actions validarán automáticamente los cambios
 
+## Solución de Problemas
+
+### Error: "Repository is not authenticated"
+
+Si obtienes este error al sincronizar desde BigQuery a GitHub:
+
+1. **Re-autenticar con GitHub:**
+   - Ve a BigQuery Studio → **Repositories**
+   - Busca tu repositorio en la lista
+   - Haz clic en **Re-authenticate** o **Disconnect** y vuelve a conectar
+   - Completa el flujo OAuth de GitHub nuevamente
+
+2. **Verificar permisos en GitHub:**
+   - Ve a GitHub → **Settings** → **Applications** → **Authorized OAuth Apps**
+   - Busca "Google Cloud Platform" o "BigQuery"
+   - Verifica que tenga permisos de lectura/escritura en tu repositorio
+   - Si es necesario, revoca y vuelve a autorizar
+
+3. **Verificar configuración del repositorio:**
+   - Asegúrate de que el repositorio existe y es accesible
+   - Verifica que el workspace `bigquery` esté configurado correctamente
+   - Confirma que la rama `main` existe en el repositorio
+
+4. **Alternativa - Usar Personal Access Token:**
+   - Si OAuth no funciona, puedes usar un Personal Access Token de GitHub
+   - Crea un token en GitHub con permisos `repo`
+   - Úsalo durante la configuración del repositorio en BigQuery
+
 ## Notas
 
 - **Nunca commitees** archivos `terraform.tfvars` con valores reales
 - Mantén las credenciales en GitHub Secrets
 - Revisa los planes de Terraform antes de aplicar cambios en producción
+- La autenticación OAuth puede expirar; re-autentica si es necesario
 

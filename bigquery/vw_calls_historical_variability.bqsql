@@ -1,0 +1,13 @@
+CREATE OR REPLACE VIEW `pph-central.analytical.vw_calls_historical_variability` AS
+SELECT c.company_id AS `company_id`
+     , c.company_name AS `company_name`
+     , EXTRACT(MONTH FROM DATE(cl.lead_call_created_on)) AS `month`
+     , COUNT(cl.lead_call_id) AS `calls`
+  FROM `pph-central.analytical.vw_consolidated_call_inbound_location` cl
+  JOIN `pph-central.settings.companies` c 
+    ON cl.company_id = c.company_id
+ WHERE DATE(cl.lead_call_created_on) < DATE_TRUNC(CURRENT_DATE(), MONTH)
+   AND EXTRACT(YEAR FROM DATE(cl.lead_call_created_on)) >= 2015
+ GROUP BY c.company_id, c.company_name, EXTRACT(MONTH FROM DATE(cl.lead_call_created_on))
+ ORDER BY c.company_id, EXTRACT(MONTH FROM DATE(cl.lead_call_created_on))
+ ;

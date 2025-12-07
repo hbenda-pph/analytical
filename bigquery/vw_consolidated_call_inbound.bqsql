@@ -1,0 +1,11 @@
+CREATE OR REPLACE VIEW `pph-central.analytical.vw_consolidated_call_inbound` AS
+SELECT cl.*
+     , cm.name
+     , cm.category_id
+     , cm.category_name
+  FROM `pph-central.bronze.consolidated_call_type_company`  cl
+  LEFT JOIN `pph-central.bronze.consolidated_campaign`      cm                                    
+    ON cm.company_project_id                                = cl.company_project_id  
+   AND cm.id                                                = cl.campaign_id
+ WHERE cl.lead_call_direction                               = 'Inbound'
+;
