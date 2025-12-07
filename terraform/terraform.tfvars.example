@@ -2,7 +2,7 @@
 # terraform.tfvars NO debe ser commiteado (está en .gitignore)
 
 project_id  = "pph-central"
-region      = "us-central1"
+region      = "us-east1"
 dataset_id  = "analytical"
 environment = "dev"
 

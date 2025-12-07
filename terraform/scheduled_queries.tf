@@ -20,7 +20,7 @@ resource "google_bigquery_data_transfer_config" "scheduled_queries" {
   location               = var.region
   data_source_id         = "scheduled_query"
   schedule               = each.value.schedule
-  destination_dataset_id = google_bigquery_dataset.analytical.dataset_id
+  destination_dataset_id = data.google_bigquery_dataset.analytical.dataset_id
   project                = var.project_id
 
   params = {
@@ -29,6 +29,6 @@ resource "google_bigquery_data_transfer_config" "scheduled_queries" {
     write_disposition      = each.value.write_disposition != null ? each.value.write_disposition : "WRITE_TRUNCATE"
   }
 
-  depends_on = [google_bigquery_dataset.analytical]
+  depends_on = [data.google_bigquery_dataset.analytical]
 }
 
